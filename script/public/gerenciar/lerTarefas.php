@@ -2,9 +2,9 @@
 include '../includes/conexao.php';
 
 $tarefas = $mysqli->query("
-    SELECT t.id, t.descricao, t.setor, t.prioridade, t.data_cadastro, t.status_tarefa, u.nome AS usuario
+    SELECT t.id, t.descricao_tarefa, t.setor, t.prioridade, t.data_cadastro, t.status_atividade, u.nome AS usuario
     FROM tarefas t
-    JOIN usuarios u ON t.usuario_responsavel = u.id
+    JOIN usuarios u ON t.id_usuario = u.id
     ORDER BY t.data_cadastro DESC
 ");
 ?>
@@ -16,13 +16,13 @@ $tarefas = $mysqli->query("
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/css/bootstrap.min.css" rel="stylesheet">
 </head>
 <body>
-<nav class="navbar navbar-expand-lg" style="background-color:rgb(0, 86, 179);">
+<nav class="navbar navbar-expand-lg" style="background-color:rgb(9, 97, 192);">
     <div class="container-fluid">
         <h3 class="text-white">Gerenciamento de Tarefas</h3>
         <ul class="navbar-nav ms-auto">
-            <li class="nav-item"><a class="nav-link text-white" href="create-usuarios.php">Usuários</a></li>
-            <li class="nav-item"><a class="nav-link text-white" href="create-tarefas.php">Tarefas</a></li>
-            <li class="nav-item"><a class="nav-link text-white" href="read-gerenciar.php">Gerenciar</a></li>
+            <li class="nav-item"><a class="nav-link text-white" href="createUsuarios.php">Usuários</a></li>
+            <li class="nav-item"><a class="nav-link text-white" href="criarTarefa.php">Tarefas</a></li>
+            <li class="nav-item"><a class="nav-link text-white" href="lerTarefa.php">Gerenciar</a></li>
         </ul>
     </div>
 </nav>
@@ -46,11 +46,11 @@ $tarefas = $mysqli->query("
             <?php while($t = $tarefas->fetch_assoc()): ?>
             <tr>
                 <td><?= $t['id'] ?></td>
-                <td><?= htmlspecialchars($t['descricao']) ?></td>
+                <td><?= htmlspecialchars($t['descricao_tarefa']) ?></td>
                 <td><?= htmlspecialchars($t['setor']) ?></td>
                 <td><?= $t['prioridade'] ?></td>
                 <td><?= $t['data_cadastro'] ?></td>
-                <td><?= $t['status_tarefa'] ?></td>
+                <td><?= $t['status_atividade'] ?></td>
                 <td><?= htmlspecialchars($t['usuario']) ?></td>
                 <td>
                     <a href="update-status.php?id=<?= $t['id'] ?>" class="btn btn-success btn-sm">Alterar Status</a>
