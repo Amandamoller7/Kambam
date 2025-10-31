@@ -1,5 +1,5 @@
 <?php
-include '../includes/conexao.php';
+include '../../Db/conexao.php';
 
 $id = $_GET['id'] ?? null;
 
@@ -9,6 +9,6 @@ if ($id) {
     $stmt->execute();
 }
 
-header('Location: read-gerenciar.php');
+header('Location: lerTarefa.php');
 exit;
 ?>

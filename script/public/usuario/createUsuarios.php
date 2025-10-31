@@ -1,5 +1,5 @@
 <?php
-include '../includes/conexao.php';
+include '../../Db/conexao.php';
 
 $erro = '';
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
@@ -10,7 +10,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $stmt = $mysqli->prepare("INSERT INTO usuarios (nome, email) VALUES (?, ?)");
         $stmt->bind_param("ss", $nome, $email);
         $stmt->execute();
-        header('Location: create-usuarios.php');
+        header('Location: createUsuarios.php');
         exit;
     } else {
         $erro = 'Preencha todos os campos.';
@@ -29,9 +29,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <div class="container-fluid">
         <h3 class="text-white">Gerenciamento de Tarefas</h3>
         <ul class="navbar-nav ms-auto">
-            <li class="nav-item"><a class="nav-link text-white" href="create-usuarios.php">Usuários</a></li>
-            <li class="nav-item"><a class="nav-link text-white" href="create-tarefas.php">Tarefas</a></li>
-            <li class="nav-item"><a class="nav-link text-white" href="read-gerenciar.php">Gerenciar</a></li>
+            <li class="nav-item"><a class="nav-link text-white" href="createUsuarios.php">Usuários</a></li>
+            <li class="nav-item"><a class="nav-link text-white" href="criarTarefa.php">Tarefas</a></li>
+            <li class="nav-item"><a class="nav-link text-white" href="lerTarefa.php">Gerenciar</a></li>
         </ul>
     </div>
 </nav>

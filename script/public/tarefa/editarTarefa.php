@@ -1,16 +1,16 @@
 <?php
-include '../includes/conexao.php';
+include '../../Db/conexao.php';
 
 $id = $_GET['id'] ?? null;
 
 if (!$id) {
-    header('Location: read-gerenciar.php');
+    header('Location: lerTarefa.php');
     exit;
 }
 
 // Buscar tarefa existente
 $stmt = $mysqli->prepare("
-    SELECT id, descricao, setor, prioridade, data_cadastro, status_tarefa, usuario_responsavel
+    SELECT id, descricao_tarefa, setor, prioridade, data_cadastro, status_Atividade, id_usuario
     FROM tarefas WHERE id = ?
 ");
 $stmt->bind_param("i", $id);
@@ -25,21 +25,21 @@ if (!$tarefa) {
 $usuarios = $mysqli->query("SELECT id, nome FROM usuarios");
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    $descricao = $_POST['descricao'];
+    $descricao = $_POST['descricao_tarefa'];
     $setor = $_POST['setor'];
     $prioridade = $_POST['prioridade'];
     $data_cadastro = $_POST['data_cadastro'];
-    $status_tarefa = $_POST['status_tarefa'];
-    $usuario_responsavel = $_POST['usuario_responsavel'];
+    $status_tarefa = $_POST['status_atividade'];
+    $usuario_responsavel = $_POST['id_usuario'];
 
     $update = $mysqli->prepare("
-        UPDATE tarefas SET descricao=?, setor=?, prioridade=?, data_cadastro=?, status_tarefa=?, usuario_responsavel=?
+        UPDATE tarefas SET descricao_tarefa=?, setor=?, prioridade=?, data_cadastro=?, status_atividade=?, id_usuario=?
         WHERE id=?
     ");
-    $update->bind_param("sssssii", $descricao, $setor, $prioridade, $data_cadastro, $status_tarefa, $usuario_responsavel, $id);
+    $update->bind_param("sssssii", $descricao_tarefa, $setor, $prioridade, $data_cadastro, $status_atividade, $id_usuario, $id);
     $update->execute();
 
-    header('Location: read-gerenciar.php');
+    header('Location: lerTarefas.php');
     exit;
 }
 ?>
@@ -56,7 +56,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <form method="post" class="row g-3">
         <div class="col-md-6">
             <label class="form-label">Descrição:</label>
-            <input type="text" name="descricao" value="<?= htmlspecialchars($tarefa['descricao']) ?>" class="form-control" required>
+            <input type="text" name="descricao" value="<?= htmlspecialchars($tarefa['descricao_tarefa']) ?>" class="form-control" required>
         </div>
         <div class="col-md-6">
             <label class="form-label">Setor:</label>
@@ -76,17 +76,17 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         </div>
         <div class="col-md-4">
             <label class="form-label">Status:</label>
-            <select name="status_tarefa" class="form-select" required>
-                <option value="Fazer" <?= $tarefa['status_tarefa']=='Fazer'?'selected':'' ?>>Fazer</option>
-                <option value="Fazendo" <?= $tarefa['status_tarefa']=='Fazendo'?'selected':'' ?>>Fazendo</option>
-                <option value="Pronto" <?= $tarefa['status_tarefa']=='Pronto'?'selected':'' ?>>Pronto</option>
+            <select name="status_atividade" class="form-select" required>
+                <option value="Fazer" <?= $tarefa['status_atividade']=='Fazer'?'selected':'' ?>>Fazer</option>
+                <option value="Fazendo" <?= $tarefa['status_atividade']=='Fazendo'?'selected':'' ?>>Fazendo</option>
+                <option value="Pronto" <?= $tarefa['status_atividade']=='Pronto'?'selected':'' ?>>Pronto</option>
             </select>
         </div>
         <div class="col-md-6">
             <label class="form-label">Usuário Responsável:</label>
-            <select name="usuario_responsavel" class="form-select" required>
+            <select name="id_usuario" class="form-select" required>
                 <?php while($u = $usuarios->fetch_assoc()): ?>
-                    <option value="<?= $u['id'] ?>" <?= $u['id']==$tarefa['usuario_responsavel']?'selected':'' ?>>
+                    <option value="<?= $u['id'] ?>" <?= $u['id']==$tarefa['id_usuario']?'selected':'' ?>>
                         <?= htmlspecialchars($u['nome']) ?>
                     </option>
                 <?php endwhile; ?>

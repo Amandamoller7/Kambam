@@ -1,24 +1,24 @@
 <?php
-include '../includes/conexao.php';
+include '../../Db/conexao.php';
 
 $usuarios = $mysqli->query("SELECT id, nome FROM usuarios");
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    $descricao = $_POST['descricao'] ?? '';
+    $descricao = $_POST['descricao_tarefa'] ?? '';
     $setor = $_POST['setor'] ?? '';
     $prioridade = $_POST['prioridade'] ?? '';
     $data_cadastro = $_POST['data_cadastro'] ?? '';
-    $status_tarefa = $_POST['status_tarefa'] ?? '';
-    $usuario_responsavel = $_POST['usuario_responsavel'] ?? '';
+    $status_tarefa = $_POST['status_atividade'] ?? '';
+    $usuario_responsavel = $_POST['id_usuario'] ?? '';
 
-    if ($descricao && $setor && $prioridade && $data_cadastro && $status_tarefa && $usuario_responsavel) {
+    if ($descricao_tarefa && $setor && $prioridade && $data_cadastro && $status_tarefa && $id_usuario) {
         $stmt = $mysqli->prepare("
-            INSERT INTO tarefas (descricao, setor, prioridade, data_cadastro, status_tarefa, usuario_responsavel)
+            INSERT INTO tarefas (descricao_tarefa, setor, prioridade, data_cadastro, status_atividade, id_usuario)
             VALUES (?, ?, ?, ?, ?, ?)
         ");
-        $stmt->bind_param("sssssi", $descricao, $setor, $prioridade, $data_cadastro, $status_tarefa, $usuario_responsavel);
+        $stmt->bind_param("sssssi", $descricao_tarefa, $setor, $prioridade, $data_cadastro, $status_atividade, $id_usuario);
         $stmt->execute();
-        header('Location: read-gerenciar.php');
+        header('Location: lerTarefas.php');
         exit;
     } else {
         $erro = "Preencha todos os campos!";
@@ -29,7 +29,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 <html lang="pt-BR">
 <head>
     <meta charset="UTF-8">
-    <title>Cadastro de Tarefas</title>
+    <title>Cadastro</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/css/bootstrap.min.css" rel="stylesheet">
 </head>
 <body>
@@ -45,7 +45,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 </nav>
 
 <div class="container mt-4">
-    <h2>Cadastro de Tarefas</h2>
+    <h2>Cadastro</h2>
     <?php if (!empty($erro)): ?><div class="alert alert-danger"><?= htmlspecialchars($erro) ?></div><?php endif; ?>
     <form method="post" class="row g-3">
         <div class="col-md-6">
@@ -72,14 +72,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         <div class="col-md-4">
             <label class="form-label">Status da Tarefa:</label>
             <select name="status_tarefa" class="form-select" required>
-                <option value="">Selecione</option>
+                <option value="">Selecione:</option>
                 <option value="Fazer">Fazer</option>
                 <option value="Fazendo">Fazendo</option>
                 <option value="Pronto">Pronto</option>
             </select>
         </div>
         <div class="col-md-6">
-            <label class="form-label">Usuário Responsável:</label>
+            <label class="form-label">ID:</label>
             <select name="usuario_responsavel" class="form-select" required>
                 <option value="">Selecione</option>
                 <?php while($u = $usuarios->fetch_assoc()): ?>
