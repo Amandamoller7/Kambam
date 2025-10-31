@@ -1,5 +1,5 @@
 create database KAMBAM;
-use SAEP;
+use KAMBAM;
 
 CREATE TABLE usuarios(
     id int PRIMARY KEY AUTO_INCREMENT,
